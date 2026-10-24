@@ -37,7 +37,12 @@ export function Lokalbord() {
           DODAJ PLAKAT
         </button>
       </header>
-      <BoardViewport events={activeEvents} navigation={navigation} onSelect={setSelected} />
+      <BoardViewport
+        events={activeEvents}
+        navigation={navigation}
+        onSelect={setSelected}
+        onAdd={() => setSubmitOpen(true)}
+      />
       {selected && (
         <EventDetailsDialog event={selected} onClose={() => setSelected(null)} />
       )}
@@ -48,7 +53,7 @@ export function Lokalbord() {
       />
       {notice && (
         <div className="toast">
-          <Check size={19} /> Plakat je dodan u lokalni pregled panoa.
+          <Check size={19} /> Plakat je dodan na pano.
         </div>
       )}
     </>

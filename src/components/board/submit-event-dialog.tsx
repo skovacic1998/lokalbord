@@ -57,13 +57,10 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
     <Modal className="submit-modal" titleId="submit-title" onClose={onClose}>
       <h2 id="submit-title">Dodaj plakat</h2>
       <p className="form-intro">
-        Dodaj događaj i pogledaj kako bi izgledao na panou. Ovo je lokalni prototip;
-        objava se ne sprema nakon osvježavanja stranice.
+        Ispuni detalje događaja i dodaj ga na pano.
       </p>
       <form onSubmit={handleSubmit}>
-        <h4>
-          Osobne informacije  
-        </h4>
+        <h4>Osobne informacije</h4>
         <div className="form-row">
           <label>
             Ime
@@ -74,14 +71,12 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
             <input name="lastName" type="text" required />
           </label>
         </div>
-         <label>
+        <label>
           Email
           <input name="email" type="email" required maxLength={80} placeholder="tvrtko@gmail.com" />
         </label>
-        <hr ></hr>
-         <h4>
-           Informacije o događaju
-        </h4>
+        <hr />
+        <h4>Informacije o događaju</h4>
         <label>
           Naziv događaja
           <input name="title" required maxLength={80} placeholder="Npr. Koncert u parku" />

@@ -22,6 +22,10 @@ textarea {
 button {
   cursor: pointer;
 }
+hr {
+  width: 100%;
+  border: 1px dashed gray;
+}
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -51,10 +55,6 @@ textarea:focus-visible,
     0 0 5px #f1f0ec,
     0 0 10px #f1f0ec;
 }
-hr {
-  width: 100%;
-  border: 1px dashed gray;
-}
 .wall-bar button:hover {
   text-decoration: underline;
 }
@@ -80,6 +80,28 @@ hr {
   width: 0;
   height: 0;
   transform-origin: 0 0;
+}
+.empty-board {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260px;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  box-shadow: 0 1px 5px #00000014;
+  text-align: center;
+}
+.empty-board p {
+  margin: 0 0 12px;
+  font: 700 15px Arial, sans-serif;
+}
+.empty-board button {
+  border: 1px solid #222;
+  padding: 8px 12px;
+  background: #222;
+  color: #fff;
+  font: 12px monospace;
 }
 .poster-position {
   position: absolute;
@@ -168,318 +190,6 @@ hr {
   height: 100%;
   object-fit: contain;
   background: #fff;
-}
-.design-1 {
-  background: #1d3f31;
-  color: #f5f0bd;
-}
-.design-1 .poster-graphic span:first-child {
-  width: 165px;
-  height: 165px;
-  top: 10px;
-  left: 16px;
-  border: 2px solid #d8e8a3;
-  border-radius: 50%;
-}
-.design-1 .poster-graphic span:nth-child(2) {
-  width: 125px;
-  height: 125px;
-  top: 32px;
-  left: 38px;
-  border: 2px solid #d8e8a3;
-  border-radius: 50%;
-}
-.design-1 .poster-graphic span:nth-child(3) {
-  width: 90px;
-  height: 90px;
-  top: 49px;
-  left: 55px;
-  background: #d8e8a3;
-  border-radius: 50%;
-}
-.design-2 {
-  background: #f3d48d;
-  color: #3e3c28;
-}
-.design-2 .poster-graphic span:first-child {
-  width: 110px;
-  height: 110px;
-  background: #e16c50;
-  border-radius: 50%;
-  top: 22px;
-  left: 17px;
-}
-.design-2 .poster-graphic span:nth-child(2) {
-  width: 93px;
-  height: 93px;
-  background: #809d6a;
-  border-radius: 50%;
-  top: 58px;
-  left: 73px;
-}
-.design-2 .poster-graphic span:nth-child(3) {
-  width: 64px;
-  height: 64px;
-  border: 10px solid #f7e7bd;
-  border-radius: 50%;
-  top: 23px;
-  left: 88px;
-}
-.design-3 {
-  background: #333341;
-  color: #f6e8ce;
-}
-.design-3 .poster-graphic span:first-child {
-  width: 140px;
-  height: 140px;
-  border: 2px solid #eaba76;
-  border-radius: 50%;
-  top: 20px;
-  left: 31px;
-}
-.design-3 .poster-graphic span:nth-child(2) {
-  width: 85px;
-  height: 85px;
-  background: #eaba76;
-  border-radius: 50%;
-  top: 47px;
-  left: 58px;
-}
-.design-3 .poster-graphic span:nth-child(3) {
-  width: 32px;
-  height: 32px;
-  background: #333341;
-  border-radius: 50%;
-  top: 73px;
-  left: 84px;
-}
-.design-4 {
-  background: #dce4c8;
-  color: #304935;
-}
-.design-4 .poster-graphic span {
-  width: 36px;
-  height: 130px;
-  border-radius: 70% 0 70% 0;
-  background: #6e986a;
-  transform: rotate(-45deg);
-  top: 28px;
-}
-.design-4 .poster-graphic span:first-child {
-  left: 34px;
-}
-.design-4 .poster-graphic span:nth-child(2) {
-  left: 79px;
-  top: 9px;
-  background: #335e44;
-}
-.design-4 .poster-graphic span:nth-child(3) {
-  left: 124px;
-  background: #a8b788;
-}
-.design-5 {
-  background: #f7c3b4;
-  color: #743943;
-}
-.design-5 .poster-graphic span {
-  width: 87px;
-  height: 87px;
-  border-radius: 15px;
-  transform: rotate(26deg);
-  top: 43px;
-}
-.design-5 .poster-graphic span:first-child {
-  left: 10px;
-  background: #ed8180;
-}
-.design-5 .poster-graphic span:nth-child(2) {
-  left: 60px;
-  top: 15px;
-  background: #ffddd4;
-}
-.design-5 .poster-graphic span:nth-child(3) {
-  left: 105px;
-  background: #e8947c;
-}
-.design-6 {
-  background: #53444e;
-  color: #ffe7b2;
-}
-.design-6 .poster-graphic span:first-child {
-  width: 100px;
-  height: 145px;
-  border: 24px solid #d5b984;
-  border-radius: 50%;
-  transform: rotate(38deg);
-  left: 40px;
-  top: 0;
-}
-.design-6 .poster-graphic span:nth-child(2) {
-  width: 96px;
-  height: 96px;
-  border: 15px solid #f2d6a0;
-  border-radius: 50%;
-  left: 70px;
-  top: 40px;
-}
-.design-6 .poster-graphic span:nth-child(3) {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #f7d788;
-  left: 20px;
-  top: 68px;
-}
-.design-7 {
-  background: #eee5d7;
-  color: #4c524c;
-}
-.design-7 .poster-graphic span {
-  width: 90px;
-  height: 90px;
-  border: 13px solid #70937f;
-  top: 28px;
-  transform: rotate(28deg);
-}
-.design-7 .poster-graphic span:first-child {
-  left: 22px;
-}
-.design-7 .poster-graphic span:nth-child(2) {
-  left: 73px;
-  top: 55px;
-  border-color: #b4846e;
-}
-.design-7 .poster-graphic span:nth-child(3) {
-  left: 105px;
-  top: 20px;
-  border-color: #d2b97d;
-}
-.design-8 {
-  background: #d7e6e4;
-  color: #285552;
-}
-.design-8 .poster-graphic span:first-child {
-  width: 140px;
-  height: 140px;
-  border: 23px solid #7aaba7;
-  border-radius: 50%;
-  left: 30px;
-  top: 12px;
-}
-.design-8 .poster-graphic span:nth-child(2) {
-  width: 2px;
-  height: 130px;
-  background: #285552;
-  transform: rotate(40deg);
-  left: 97px;
-  top: 26px;
-}
-.design-8 .poster-graphic span:nth-child(3) {
-  width: 2px;
-  height: 130px;
-  background: #285552;
-  transform: rotate(-40deg);
-  left: 97px;
-  top: 26px;
-}
-.design-9 {
-  background: #f3e7c8;
-  color: #67543b;
-}
-.design-9 .poster-graphic span:first-child {
-  width: 132px;
-  height: 89px;
-  border-radius: 0 0 70px 70px;
-  background: #b47a5a;
-  left: 34px;
-  top: 44px;
-}
-.design-9 .poster-graphic span:nth-child(2) {
-  width: 60px;
-  height: 55px;
-  border: 14px solid #b47a5a;
-  border-radius: 50%;
-  left: 124px;
-  top: 52px;
-}
-.design-9 .poster-graphic span:nth-child(3) {
-  width: 115px;
-  height: 7px;
-  background: #826e51;
-  left: 43px;
-  top: 135px;
-}
-.design-10 {
-  background: #d3bfec;
-  color: #403056;
-}
-.design-10 .poster-graphic span {
-  width: 55px;
-  height: 115px;
-  background: #7d67a5;
-  transform: rotate(38deg);
-  top: 17px;
-  border-radius: 55%;
-}
-.design-10 .poster-graphic span:first-child {
-  left: 23px;
-}
-.design-10 .poster-graphic span:nth-child(2) {
-  left: 76px;
-  top: 40px;
-  background: #b16887;
-}
-.design-10 .poster-graphic span:nth-child(3) {
-  left: 130px;
-  background: #8774b1;
-}
-.design-11 {
-  background: #f1dcaf;
-  color: #64502e;
-}
-.design-11 .poster-graphic span {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-}
-.design-11 .poster-graphic span:first-child {
-  left: 10px;
-  top: 12px;
-  background: #94b28a;
-}
-.design-11 .poster-graphic span:nth-child(2) {
-  left: 80px;
-  top: 22px;
-  background: #e6a080;
-}
-.design-11 .poster-graphic span:nth-child(3) {
-  left: 45px;
-  top: 74px;
-  background: #dcc177;
-}
-.design-12 {
-  background: #e0ebcb;
-  color: #36583b;
-}
-.design-12 .poster-graphic span {
-  width: 55px;
-  height: 105px;
-  background: #eb9565;
-  border-radius: 60% 60% 45% 45%;
-  transform: rotate(23deg);
-  top: 30px;
-}
-.design-12 .poster-graphic span:first-child {
-  left: 25px;
-}
-.design-12 .poster-graphic span:nth-child(2) {
-  left: 77px;
-  top: 15px;
-  background: #779d66;
-}
-.design-12 .poster-graphic span:nth-child(3) {
-  left: 130px;
-  background: #dab85e;
 }
 .poster-art:has(.poster-upload) {
   padding: 0;

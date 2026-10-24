@@ -7,9 +7,10 @@ type BoardViewportProps = {
   events: Event[];
   navigation: BoardNavigation;
   onSelect: (event: Event) => void;
+  onAdd: () => void;
 };
 
-export function BoardViewport({ events, navigation, onSelect }: BoardViewportProps) {
+export function BoardViewport({ events, navigation, onSelect, onAdd }: BoardViewportProps) {
   const { view, ready, viewportRef, pointerDown, pointerMove, pointerUp, pointerCancel, keyDown } = navigation;
 
   return (
@@ -55,6 +56,14 @@ export function BoardViewport({ events, navigation, onSelect }: BoardViewportPro
           </div>
         ))}
       </div>
+      {events.length === 0 && (
+        <div className="empty-board" role="status">
+          <p>Pano je prazan.</p>
+          <button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={onAdd}>
+            Dodaj prvi plakat
+          </button>
+        </div>
+      )}
     </main>
   );
 }

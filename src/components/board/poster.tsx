@@ -2,7 +2,7 @@ import type { Event } from "@/lib/events";
 
 export function Poster({ event }: { event: Event }) {
   return (
-    <div className={`poster-art design-${event.design}`}>
+    <div className="poster-art">
       {event.image ? (
         // Local preview images use a blob URL and retain the source artwork's aspect ratio.
         // eslint-disable-next-line @next/next/no-img-element

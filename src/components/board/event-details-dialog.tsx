@@ -17,7 +17,7 @@ export function EventDetailsDialog({ event, onClose }: EventDetailsDialogProps) 
       </div>
       <div className="detail-copy">
         <span className="eyebrow">
-          {event.category.toUpperCase()} / KUTINA {event.preview ? "/ PREGLED" : ""}
+          {event.category.toUpperCase()} / KUTINA
         </span>
         <h2 id="detail-title">{event.title}</h2>
         <p>{event.description}</p>
