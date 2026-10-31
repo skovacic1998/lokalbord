@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type SetStateAction } from "react";
-import { CELL_HEIGHT, CELL_WIDTH, constrainView, fitBoard, fitScale, initialBoardView, type BoardView, type ViewportSize } from "@/lib/board";
+import { constrainView, fitBoard, fitScale, initialBoardView, toBoardPixels, type BoardView, type ViewportSize } from "@/lib/board";
 import type { Event } from "@/lib/events";
 
 type Point = { x: number; y: number };
@@ -167,7 +167,8 @@ export function useBoardNavigation(onPosterSelect: (id: string) => void) {
 
   function focusEvent(event: Pick<Event, "col" | "row">) {
     const scale = 1.05;
-    updateView({ scale, x: -event.col * CELL_WIDTH * scale, y: -event.row * CELL_HEIGHT * scale });
+    const position = toBoardPixels(event);
+    updateView({ scale, x: -position.x * scale, y: -position.y * scale });
   }
 
   function zoom(factor: number) {

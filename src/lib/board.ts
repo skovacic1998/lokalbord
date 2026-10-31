@@ -1,9 +1,11 @@
 // Poster slots include the space around each poster.
 export const CELL_WIDTH = 190;
 export const CELL_HEIGHT = 260;
-// The board's coordinate space. It is a visual boundary, not a fixed grid of slots.
-export const BOARD_WIDTH = 2000;
-export const BOARD_HEIGHT = 2000;
+export const BOARD_COLUMNS = 10;
+export const BOARD_ROWS = 8;
+// The board has 80 fixed slots, centred within this visual canvas.
+export const BOARD_WIDTH = 2100;
+export const BOARD_HEIGHT = 2300;
 export const MAX_SCALE = 2;
 export const INITIAL_SCALE = 0.1;
 const VIEW_PADDING = 24;
@@ -11,6 +13,13 @@ const VIEW_PADDING = 24;
 export type BoardView = { x: number; y: number; scale: number };
 export type ViewportSize = { width: number; height: number };
 type Spot = { col: number; row: number };
+
+export function toBoardPixels({ col, row }: Spot) {
+  return {
+    x: (col - (BOARD_COLUMNS - 1) / 2) * CELL_WIDTH,
+    y: (row - (BOARD_ROWS - 1) / 2) * CELL_HEIGHT,
+  };
+}
 
 export function fitScale({ width, height }: ViewportSize) {
   return Math.min(
@@ -40,20 +49,18 @@ export function constrainView(view: BoardView, size: ViewportSize): BoardView {
   };
 }
 
-// Place new posters from the centre outwards, with no fixed slot count.
-export function findFreeSpot(events: readonly Spot[]): Spot {
+// Place new posters from the centre outwards, stopping after all 80 slots are used.
+export function findFreeSpot(events: readonly Spot[]): Spot | null {
   const occupied = new Set(events.map((event) => `${event.col},${event.row}`));
-  for (let radius = 0; ; radius++) {
-    const candidates: Spot[] = [];
-    for (let row = -radius; row <= radius; row++) {
-      for (let col = -radius; col <= radius; col++) {
-        if (Math.max(Math.abs(col), Math.abs(row)) === radius) candidates.push({ col, row });
-      }
+  const candidates: Spot[] = [];
+  for (let row = 0; row < BOARD_ROWS; row++) {
+    for (let col = 0; col < BOARD_COLUMNS; col++) {
+      candidates.push({ col, row });
     }
-    candidates.sort((a, b) =>
-      (a.col ** 2 + a.row ** 2) - (b.col ** 2 + b.row ** 2) || a.row - b.row || a.col - b.col,
-    );
-    const free = candidates.find(({ col, row }) => !occupied.has(`${col},${row}`));
-    if (free) return free;
   }
+  candidates.sort((a, b) =>
+    (a.col - 4.5) ** 2 + (a.row - 3.5) ** 2 - ((b.col - 4.5) ** 2 + (b.row - 3.5) ** 2)
+      || a.row - b.row || a.col - b.col,
+  );
+  return candidates.find(({ col, row }) => !occupied.has(`${col},${row}`)) ?? null;
 }

@@ -38,6 +38,7 @@ jobs:
         run: npm run build
         env:
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_EVENTS_API_URL: https://api.skovacic.dev/api/events/kutina
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

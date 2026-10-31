@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type Event, type EventDraft } from "@/lib/events";
+import { getCurrentEvents } from "@/lib/events-api";
 import { findFreeSpot } from "@/lib/board";
 import { formatDate } from "@/lib/format-date";
 
@@ -7,6 +8,9 @@ export function useBoardEvents() {
   const [events, setEvents] = useState<Event[]>([]);
   const [now, setNow] = useState(0);
   const [notice, setNotice] = useState(false);
+  const [boardFull, setBoardFull] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const imageUrls = useRef<string[]>([]);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -14,6 +18,20 @@ export function useBoardEvents() {
     setNow(Date.now());
     const timer = window.setInterval(() => setNow(Date.now()), 60_000);
     return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getCurrentEvents(controller.signal)
+      .then(setEvents)
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setLoadError(true);
+      })
+      .finally(() => setIsLoading(false));
+
+    return () => controller.abort();
   }, []);
 
   useEffect(() => () => {
@@ -28,6 +46,10 @@ export function useBoardEvents() {
 
   function addEvent(draft: EventDraft, imageFile: File | null) {
     const spot = findFreeSpot(activeEvents);
+    if (!spot) {
+      setBoardFull(true);
+      return null;
+    }
     const image = imageFile ? URL.createObjectURL(imageFile) : undefined;
     if (image) imageUrls.current.push(image);
 
@@ -41,11 +63,12 @@ export function useBoardEvents() {
     };
 
     setEvents((current) => [...current, event]);
+    setBoardFull(false);
     setNotice(true);
     if (noticeTimer.current) clearTimeout(noticeTimer.current);
     noticeTimer.current = setTimeout(() => setNotice(false), 5500);
     return event;
   }
 
-  return { activeEvents, addEvent, notice };
+  return { activeEvents, addEvent, notice, boardFull, isLoading, loadError };
 }

@@ -12,13 +12,14 @@ import type { Event, EventDraft } from "@/lib/events";
 export function Lokalbord() {
   const [selected, setSelected] = useState<Event | null>(null);
   const [submitOpen, setSubmitOpen] = useState(false);
-  const { activeEvents, addEvent, notice } = useBoardEvents();
+  const { activeEvents, addEvent, notice, boardFull, isLoading, loadError } = useBoardEvents();
   const navigation = useBoardNavigation((id) => {
     setSelected(activeEvents.find((event) => event.id === id) ?? null);
   });
 
   function handleSubmit(draft: EventDraft, imageFile: File | null) {
     const event = addEvent(draft, imageFile);
+    if (!event) return;
     setSubmitOpen(false);
     navigation.focusEvent(event);
   }
@@ -42,6 +43,8 @@ export function Lokalbord() {
         navigation={navigation}
         onSelect={setSelected}
         onAdd={() => setSubmitOpen(true)}
+        isLoading={isLoading}
+        loadError={loadError}
       />
       {selected && (
         <EventDetailsDialog event={selected} onClose={() => setSelected(null)} />
@@ -56,6 +59,7 @@ export function Lokalbord() {
           <Check size={19} /> Plakat je dodan na pano.
         </div>
       )}
+      {boardFull && <div className="toast">Pano je pun.</div>}
     </>
   );
 }

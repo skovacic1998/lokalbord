@@ -1,5 +1,5 @@
 import type { BoardNavigation } from "@/hooks/use-board-navigation";
-import { CELL_HEIGHT, CELL_WIDTH } from "@/lib/board";
+import { toBoardPixels } from "@/lib/board";
 import type { Event } from "@/lib/events";
 import { Poster } from "./poster";
 
@@ -8,9 +8,11 @@ type BoardViewportProps = {
   navigation: BoardNavigation;
   onSelect: (event: Event) => void;
   onAdd: () => void;
+  isLoading: boolean;
+  loadError: boolean;
 };
 
-export function BoardViewport({ events, navigation, onSelect, onAdd }: BoardViewportProps) {
+export function BoardViewport({ events, navigation, onSelect, onAdd, isLoading, loadError }: BoardViewportProps) {
   const { view, ready, viewportRef, pointerDown, pointerMove, pointerUp, pointerCancel, keyDown } = navigation;
 
   return (
@@ -36,7 +38,7 @@ export function BoardViewport({ events, navigation, onSelect, onAdd }: BoardView
           <div
             className="poster-position"
             key={event.id}
-            style={{ left: event.col * CELL_WIDTH, top: event.row * CELL_HEIGHT }}
+            style={{ left: toBoardPixels(event).x, top: toBoardPixels(event).y }}
           >
             <div
               className="poster-frame"
@@ -56,7 +58,17 @@ export function BoardViewport({ events, navigation, onSelect, onAdd }: BoardView
           </div>
         ))}
       </div>
-      {events.length === 0 && (
+      {isLoading && (
+        <div className="empty-board" role="status">
+          <p>Učitavam događaje…</p>
+        </div>
+      )}
+      {!isLoading && loadError && (
+        <div className="empty-board" role="alert">
+          <p>Događaji trenutačno nisu dostupni.</p>
+        </div>
+      )}
+      {!isLoading && !loadError && events.length === 0 && (
         <div className="empty-board" role="status">
           <p>Pano je prazan.</p>
           <button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={onAdd}>
