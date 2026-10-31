@@ -20,5 +20,11 @@ export type EventDraft = Pick<
   "title" | "startsAt" | "endsAt" | "venue" | "category" | "description"
 >;
 
+export type EventSubmissionDraft = EventDraft & {
+  submitterName: string;
+  submitterLastName: string;
+  submitterEmail: string;
+};
+
 export const categories: Array<Category | "Sve"> = ["Sve", "Glazba", "Kultura", "Druženje", "Sport", "Za djecu"];
 

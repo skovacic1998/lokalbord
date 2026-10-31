@@ -1,31 +1,32 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { ArrowRight, Plus, UploadCloud } from "lucide-react";
-import { categories, type Category, type EventDraft } from "@/lib/events";
+import { categories, type Category, type EventSubmissionDraft } from "@/lib/events";
 import { Modal } from "./modal";
 
 type SubmitEventDialogProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (draft: EventDraft, imageFile: File | null) => void;
+  onSubmit: (draft: EventSubmissionDraft, imageFile: File | null) => Promise<void>;
 };
 
 export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialogProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
-    if (file && file.size > 8 * 1024 * 1024) {
+    if (file && file.size > 5 * 1024 * 1024) {
       e.target.value = "";
       setImageFile(null);
-      setFormError("Plakat može imati najviše 8 MB.");
+      setFormError("Plakat može imati najviše 5 MB.");
       return;
     }
     setImageFile(file);
     setFormError("");
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const title = String(form.get("title") ?? "").trim();
@@ -40,15 +41,25 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
     }
 
     setFormError("");
-    onSubmit({
-      title,
-      startsAt,
-      endsAt,
-      venue,
-      category: String(form.get("category")) as Category,
-      description: String(form.get("description") ?? "").trim() || "Detalji događaja uskoro.",
-    }, imageFile);
-    setImageFile(null);
+    setIsSubmitting(true);
+    try {
+      await onSubmit({
+        title,
+        startsAt,
+        endsAt,
+        venue,
+        category: String(form.get("category")) as Category,
+        description: String(form.get("description") ?? "").trim(),
+        submitterName: String(form.get("name") ?? "").trim(),
+        submitterLastName: String(form.get("lastName") ?? "").trim(),
+        submitterEmail: String(form.get("email") ?? "").trim(),
+      }, imageFile);
+      setImageFile(null);
+    } catch (error: unknown) {
+      setFormError(error instanceof Error ? error.message : "Slanje prijedloga nije uspjelo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (!open) return null;
@@ -57,29 +68,29 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
     <Modal className="submit-modal" titleId="submit-title" onClose={onClose}>
       <h2 id="submit-title">Dodaj plakat</h2>
       <p className="form-intro">
-        Ispuni detalje događaja i dodaj ga na pano.
+        Pošalji prijedlog događaja na pregled. Nakon odobrenja pojavit će se na panou.
       </p>
       <form onSubmit={handleSubmit}>
         <h4>Osobne informacije</h4>
         <div className="form-row">
           <label>
             Ime
-            <input name="name" type="text" required />
+          <input name="name" type="text" required maxLength={100} />
           </label>
           <label>
             Prezime
-            <input name="lastName" type="text" required />
+          <input name="lastName" type="text" required maxLength={100} />
           </label>
         </div>
         <label>
           Email
-          <input name="email" type="email" required maxLength={80} placeholder="tvrtko@gmail.com" />
+          <input name="email" type="email" required maxLength={320} placeholder="tvrtko@gmail.com" />
         </label>
         <hr />
         <h4>Informacije o događaju</h4>
         <label>
           Naziv događaja
-          <input name="title" required maxLength={80} placeholder="Npr. Koncert u parku" />
+          <input name="title" required maxLength={100} placeholder="Npr. Koncert u parku" />
         </label>
         <div className="form-row">
           <label>
@@ -107,7 +118,7 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
         </div>
         <label>
           Kratki opis
-          <textarea name="description" rows={2} maxLength={280} placeholder="Što posjetitelji mogu očekivati?" />
+          <textarea name="description" rows={2} maxLength={500} placeholder="Što posjetitelji mogu očekivati?" />
         </label>
         <label className="file-field">
           <span>Plakat (JPG, PNG ili WebP)</span>
@@ -117,8 +128,8 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
           <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} />
         </label>
         {formError && <p className="form-error" role="alert">{formError}</p>}
-        <button className="primary-button submit-button" type="submit">
-          <Plus size={19} /> Dodaj na pano <ArrowRight size={18} />
+        <button className="primary-button submit-button" type="submit" disabled={isSubmitting}>
+          <Plus size={19} /> {isSubmitting ? "Šaljem…" : "Pošalji na pregled"} <ArrowRight size={18} />
         </button>
       </form>
     </Modal>

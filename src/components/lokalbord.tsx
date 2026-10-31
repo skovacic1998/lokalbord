@@ -7,21 +7,19 @@ import { EventDetailsDialog } from "@/components/board/event-details-dialog";
 import { SubmitEventDialog } from "@/components/board/submit-event-dialog";
 import { useBoardEvents } from "@/hooks/use-board-events";
 import { useBoardNavigation } from "@/hooks/use-board-navigation";
-import type { Event, EventDraft } from "@/lib/events";
+import type { Event, EventSubmissionDraft } from "@/lib/events";
 
 export function Lokalbord() {
   const [selected, setSelected] = useState<Event | null>(null);
   const [submitOpen, setSubmitOpen] = useState(false);
-  const { activeEvents, addEvent, notice, boardFull, isLoading, loadError } = useBoardEvents();
+  const { activeEvents, submitEvent, notice, isLoading, loadError } = useBoardEvents();
   const navigation = useBoardNavigation((id) => {
     setSelected(activeEvents.find((event) => event.id === id) ?? null);
   });
 
-  function handleSubmit(draft: EventDraft, imageFile: File | null) {
-    const event = addEvent(draft, imageFile);
-    if (!event) return;
+  async function handleSubmit(draft: EventSubmissionDraft, imageFile: File | null) {
+    await submitEvent(draft, imageFile);
     setSubmitOpen(false);
-    navigation.focusEvent(event);
   }
 
   return (
@@ -56,10 +54,9 @@ export function Lokalbord() {
       />
       {notice && (
         <div className="toast">
-          <Check size={19} /> Plakat je dodan na pano.
+          <Check size={19} /> {notice}
         </div>
       )}
-      {boardFull && <div className="toast">Pano je pun.</div>}
     </>
   );
 }

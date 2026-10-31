@@ -1,17 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { type Event, type EventDraft } from "@/lib/events";
-import { getCurrentEvents } from "@/lib/events-api";
-import { findFreeSpot } from "@/lib/board";
-import { formatDate } from "@/lib/format-date";
+import { type Event, type EventSubmissionDraft } from "@/lib/events";
+import { getCurrentEvents, submitEvent as sendEventSubmission } from "@/lib/events-api";
 
 export function useBoardEvents() {
   const [events, setEvents] = useState<Event[]>([]);
   const [now, setNow] = useState(0);
-  const [notice, setNotice] = useState(false);
-  const [boardFull, setBoardFull] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const imageUrls = useRef<string[]>([]);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -35,7 +31,6 @@ export function useBoardEvents() {
   }, []);
 
   useEffect(() => () => {
-    imageUrls.current.forEach((url) => URL.revokeObjectURL(url));
     if (noticeTimer.current) clearTimeout(noticeTimer.current);
   }, []);
 
@@ -44,31 +39,14 @@ export function useBoardEvents() {
     [events, now],
   );
 
-  function addEvent(draft: EventDraft, imageFile: File | null) {
-    const spot = findFreeSpot(activeEvents);
-    if (!spot) {
-      setBoardFull(true);
-      return null;
-    }
-    const image = imageFile ? URL.createObjectURL(imageFile) : undefined;
-    if (image) imageUrls.current.push(image);
-
-    const event: Event = {
-      ...draft,
-      ...spot,
-      id: `event-${Date.now()}`,
-      eyebrow: "NOVO NA PANOU",
-      dateLabel: formatDate(draft.startsAt),
-      image,
-    };
-
-    setEvents((current) => [...current, event]);
-    setBoardFull(false);
-    setNotice(true);
+  async function submitEvent(draft: EventSubmissionDraft, imageFile: File | null) {
+    const result = await sendEventSubmission(draft, imageFile);
+    setNotice(result.posterUploaded
+      ? "Prijedlog je poslan na pregled. Nakon odobrenja pojavit će se na panou."
+      : "Prijedlog je poslan na pregled, ali plakat nije učitan.");
     if (noticeTimer.current) clearTimeout(noticeTimer.current);
-    noticeTimer.current = setTimeout(() => setNotice(false), 5500);
-    return event;
+    noticeTimer.current = setTimeout(() => setNotice(null), 6500);
   }
 
-  return { activeEvents, addEvent, notice, boardFull, isLoading, loadError };
+  return { activeEvents, submitEvent, notice, isLoading, loadError };
 }

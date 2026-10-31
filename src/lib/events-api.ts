@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/format-date";
-import { type Category, type Event } from "@/lib/events";
+import { type Category, type Event, type EventSubmissionDraft } from "@/lib/events";
 
 type CurrentEventDto = {
   id: string;
@@ -17,6 +17,14 @@ type CurrentEventDto = {
 
 const eventsEndpoint =
   process.env.NEXT_PUBLIC_EVENTS_API_URL ?? "/backend/api/events/kutina";
+
+const categoryCodes: Record<Category, CurrentEventDto["category"]> = {
+  Glazba: "GLAZBA",
+  Kultura: "KULTURA",
+  Druženje: "DRUZENJE",
+  Sport: "SPORT",
+  "Za djecu": "ZA_DJECU",
+};
 
 const categoryLabels: Record<CurrentEventDto["category"], Category> = {
   GLAZBA: "Glazba",
@@ -65,4 +73,74 @@ export async function getCurrentEvents(signal?: AbortSignal): Promise<Event[]> {
   if (!Array.isArray(data)) throw new Error("Poslužitelj je vratio neispravan popis događaja.");
 
   return data.map((event, index) => toEvent(event as CurrentEventDto, index));
+}
+
+type SubmissionResponse = {
+  submissionId: string;
+  status: "PENDING";
+};
+
+export class SubmissionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SubmissionError";
+  }
+}
+
+function apiUrl(path: string) {
+  if (eventsEndpoint.startsWith("/")) return `/backend${path}`;
+  return new URL(path, eventsEndpoint).toString();
+}
+
+async function errorMessage(response: Response) {
+  if (response.status === 429) {
+    return "Previše je prijedloga poslano s ove mreže. Pokušajte ponovno kasnije.";
+  }
+
+  try {
+    const body: unknown = await response.json();
+    if (body && typeof body === "object") {
+      const message = "detail" in body ? body.detail : "message" in body ? body.message : undefined;
+      if (typeof message === "string" && message.trim()) return message;
+    }
+  } catch {
+    // The server may return an empty or non-JSON error response.
+  }
+  return "Slanje prijedloga nije uspjelo. Pokušajte ponovno.";
+}
+
+export async function submitEvent(
+  draft: EventSubmissionDraft,
+  poster: File | null,
+): Promise<{ posterUploaded: boolean }> {
+  const response = await fetch(apiUrl("/api/events/kutina/submissions"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: draft.title,
+      startsAt: new Date(draft.startsAt).toISOString(),
+      endsAt: new Date(draft.endsAt).toISOString(),
+      venue: draft.venue,
+      category: categoryCodes[draft.category],
+      description: draft.description || undefined,
+      submitterName: draft.submitterName,
+      submitterLastName: draft.submitterLastName,
+      submitterEmail: draft.submitterEmail,
+    }),
+  });
+
+  if (!response.ok) throw new SubmissionError(await errorMessage(response));
+  const submission = (await response.json()) as SubmissionResponse;
+
+  if (!poster) return { posterUploaded: true };
+
+  const formData = new FormData();
+  formData.append("file", poster);
+  const posterResponse = await fetch(
+    apiUrl(`/api/event-submissions/${submission.submissionId}/poster`),
+    { method: "POST", body: formData },
+  );
+
+  // The event is already safely pending if the optional poster upload fails.
+  return { posterUploaded: posterResponse.ok };
 }
