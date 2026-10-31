@@ -35,8 +35,13 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
     const venue = String(form.get("venue") ?? "").trim();
     if (!title || !venue || !startsAt || !endsAt) return;
 
-    if (new Date(endsAt) <= new Date(startsAt) || new Date(endsAt).getTime() <= Date.now()) {
-      setFormError("Završetak mora biti nakon početka i u budućnosti.");
+    if (new Date(startsAt).getTime() <= Date.now()) {
+      setFormError("Početak događaja mora biti u budućnosti.");
+      return;
+    }
+
+    if (new Date(endsAt) <= new Date(startsAt)) {
+      setFormError("Završetak mora biti nakon početka.");
       return;
     }
 
