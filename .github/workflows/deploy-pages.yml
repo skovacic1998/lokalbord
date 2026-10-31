@@ -37,7 +37,8 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # lokalbord.skovacic.dev serves this project from the domain root.
+          PAGES_BASE_PATH: ""
           NEXT_PUBLIC_EVENTS_API_URL: https://api.skovacic.dev/api/events/kutina
 
       - name: Upload Pages artifact
