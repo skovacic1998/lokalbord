@@ -2,6 +2,16 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { ArrowRight, Plus, UploadCloud } from "lucide-react";
 import { categories, type Category, type EventSubmissionDraft } from "@/lib/events";
 import { Modal } from "./modal";
+import { EventDateTimeField } from "./event-date-time-field";
+
+const minimumDuration = 60 * 60 * 1000;
+
+function minimumEndTime(startsAt: string) {
+  if (!startsAt) return "";
+  const date = new Date(new Date(startsAt).getTime() + minimumDuration);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
 
 type SubmitEventDialogProps = {
   open: boolean;
@@ -13,6 +23,21 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [startsAt, setStartsAt] = useState("");
+  const [endsAt, setEndsAt] = useState("");
+  const minEndsAt = minimumEndTime(startsAt);
+
+  function handleStartChange(value: string) {
+    setStartsAt(value);
+    const minimum = minimumEndTime(value);
+    if (minimum && (!endsAt || new Date(endsAt).getTime() < new Date(minimum).getTime())) {
+      setEndsAt(minimum);
+    }
+  }
+
+  function handleEndChange(value: string) {
+    setEndsAt(value && new Date(value).getTime() < new Date(minEndsAt).getTime() ? minEndsAt : value);
+  }
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
@@ -35,13 +60,25 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
     const venue = String(form.get("venue") ?? "").trim();
     if (!title || !venue || !startsAt || !endsAt) return;
 
-    if (new Date(startsAt).getTime() <= Date.now()) {
+    const startTime = new Date(startsAt).getTime();
+    const endTime = new Date(endsAt).getTime();
+    if (!Number.isFinite(startTime) || !Number.isFinite(endTime)) {
+      setFormError("Odaberite ispravan datum i vrijeme.");
+      return;
+    }
+
+    if ([startsAt, endsAt].some((value) => Number(value.slice(14, 16)) % 5 !== 0)) {
+      setFormError("Vrijeme odaberite u razmacima od 5 minuta.");
+      return;
+    }
+
+    if (startTime <= Date.now()) {
       setFormError("Početak događaja mora biti u budućnosti.");
       return;
     }
 
-    if (new Date(endsAt) <= new Date(startsAt)) {
-      setFormError("Završetak mora biti nakon početka.");
+    if (endTime - startTime < minimumDuration) {
+      setFormError("Završetak mora biti najmanje sat vremena nakon početka.");
       return;
     }
 
@@ -60,6 +97,8 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
         submitterEmail: String(form.get("email") ?? "").trim(),
       }, imageFile);
       setImageFile(null);
+      setStartsAt("");
+      setEndsAt("");
     } catch (error: unknown) {
       setFormError(error instanceof Error ? error.message : "Slanje prijedloga nije uspjelo.");
     } finally {
@@ -98,14 +137,15 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
           <input name="title" required maxLength={100} placeholder="Npr. Koncert u parku" />
         </label>
         <div className="form-row">
-          <label>
-            Početak
-            <input name="startsAt" type="datetime-local" required />
-          </label>
-          <label>
-            Završetak
-            <input name="endsAt" type="datetime-local" required />
-          </label>
+          <EventDateTimeField name="startsAt" label="Početak" value={startsAt} onChange={handleStartChange} />
+          <EventDateTimeField
+            name="endsAt"
+            label="Završetak"
+            value={endsAt}
+            min={minEndsAt}
+            disabled={!startsAt}
+            onChange={handleEndChange}
+          />
         </div>
         <div className="form-row">
           <label>
