@@ -58,6 +58,31 @@ textarea:focus-visible,
 .wall-bar button:hover {
   text-decoration: underline;
 }
+.board-footer {
+  position: fixed;
+  right: 24px;
+  bottom: 20px;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 16px;
+  max-width: calc(100% - 32px);
+  padding: 6px 8px;
+  background: #f1f0ecee;
+  font: 12px monospace;
+}
+.board-footer a,
+.info-nav a,
+.info-back {
+  color: #222;
+  text-decoration: none;
+}
+.board-footer a:hover,
+.info-nav a:hover,
+.info-back:hover {
+  text-decoration: underline;
+}
 .board-viewport {
   position: fixed;
   inset: 0;
@@ -375,6 +400,82 @@ h4 {
   color: #a42b20;
   font-size: 12px;
 }
+.form-legal {
+  margin: 0;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.form-legal a,
+.info-content a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.info-page {
+  min-height: 100dvh;
+  padding: 28px 24px 64px;
+}
+.info-inner {
+  width: min(680px, 100%);
+  margin: 0 auto;
+}
+.info-back,
+.info-header span,
+.info-nav {
+  font: 12px monospace;
+}
+.info-header {
+  margin: 70px 0 48px;
+}
+.info-header span {
+  color: #777;
+}
+.info-header h1 {
+  margin: 16px 0;
+  font-size: clamp(34px, 6vw, 52px);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+.info-header p {
+  max-width: 540px;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.info-content {
+  font-size: 15px;
+  line-height: 1.7;
+}
+.info-content section {
+  margin: 0 0 36px;
+}
+.info-content h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+.info-content p {
+  margin: 0 0 12px;
+}
+.info-content ol {
+  padding-left: 20px;
+}
+.info-content li {
+  padding-left: 4px;
+  margin-bottom: 8px;
+}
+.info-draft {
+  padding: 14px 16px;
+  border: 1px solid #b79857;
+  background: #fff8e7;
+}
+.info-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+}
 .toast {
   position: fixed;
   bottom: 20px;
@@ -392,6 +493,18 @@ h4 {
 @media (max-width: 600px) {
   .wall-bar {
     padding: 14px 16px;
+  }
+  .board-footer {
+    right: 8px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    gap: 8px 12px;
+    font-size: 11px;
+  }
+  .info-page {
+    padding: 22px 20px 48px;
+  }
+  .info-header {
+    margin: 54px 0 36px;
   }
   .modal-backdrop {
     padding: 12px;

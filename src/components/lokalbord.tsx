@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check } from "lucide-react";
+import Link from "next/link";
 import { BoardViewport } from "@/components/board/board-viewport";
 import { EventDetailsDialog } from "@/components/board/event-details-dialog";
 import { SubmitEventDialog } from "@/components/board/submit-event-dialog";
@@ -44,6 +45,11 @@ export function Lokalbord() {
         isLoading={isLoading}
         loadError={loadError}
       />
+      <nav className="board-footer" aria-label="Informacije o Lokalbordu">
+        <Link href="/kako-koristiti">Kako koristiti</Link>
+        <Link href="/uvjeti-koristenja">Uvjeti korištenja</Link>
+        <Link href="/politika-privatnosti">Privatnost</Link>
+      </nav>
       {selected && (
         <EventDetailsDialog event={selected} onClose={() => setSelected(null)} />
       )}

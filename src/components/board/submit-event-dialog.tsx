@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { ArrowRight, Plus, UploadCloud } from "lucide-react";
+import Link from "next/link";
 import { categories, type Category, type EventSubmissionDraft } from "@/lib/events";
 import { Modal } from "./modal";
 import { EventDateTimeField } from "./event-date-time-field";
@@ -173,6 +174,11 @@ export function SubmitEventDialog({ open, onClose, onSubmit }: SubmitEventDialog
           <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} />
         </label>
         {formError && <p className="form-error" role="alert">{formError}</p>}
+        <p className="form-legal">
+          Podatke koristimo za pregled prijedloga i kontakt u vezi s događajem. Više u{" "}
+          <Link href="/politika-privatnosti">politici privatnosti</Link> i{" "}
+          <Link href="/uvjeti-koristenja">uvjetima korištenja</Link>.
+        </p>
         <button className="primary-button submit-button" type="submit" disabled={isSubmitting}>
           <Plus size={19} /> {isSubmitting ? "Šaljem…" : "Pošalji na pregled"} <ArrowRight size={18} />
         </button>
