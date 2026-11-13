@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AnalyticsConsent } from "@/components/analytics-consent";
 
 export const metadata: Metadata = {
   title: "Lokalbord — događaji na jednom mjestu",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="hr">
-      <body>{children}</body>
+      <body>{children}<AnalyticsConsent /></body>
     </html>
   );
 }

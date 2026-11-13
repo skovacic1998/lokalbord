@@ -41,6 +41,7 @@ export default function PrivacyPage() {
       </section>
       <section>
         <h2>Kolačići i promjene politike</h2>
+        <p>Uz tvoju privolu koristimo Google Analytics za statistiku posjeta, uključujući broj posjetitelja i pregledanih stranica. Google koristi analitičke kolačiće i obrađuje podatke o posjetu. Privolu možeš promijeniti odabirom opcije „Postavke kolačića” na dnu stranice.</p>
         <p>Politiku možemo ažurirati kada se promijeni način rada stranice ili obrade podataka.</p>
       </section>
     </InfoPage>

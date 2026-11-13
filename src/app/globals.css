@@ -526,3 +526,36 @@ h4 {
     grid-template-columns: 1fr;
   }
 }
+
+.cookie-settings {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 11;
+  border: 0;
+  padding: 6px;
+  background: #f1f0ecee;
+  color: #222;
+  font: 12px monospace;
+}
+.cookie-banner {
+  position: fixed;
+  z-index: 70;
+  left: 16px;
+  bottom: 16px;
+  width: min(420px, calc(100% - 32px));
+  padding: 18px;
+  background: #fff;
+  box-shadow: 0 2px 12px #0003;
+  line-height: 1.5;
+}
+.cookie-banner p { margin: 0 0 14px; }
+.cookie-banner a { color: inherit; }
+.cookie-banner div { display: flex; gap: 10px; }
+.cookie-banner button {
+  flex: 1;
+  border: 1px solid #222;
+  padding: 10px;
+  color: #222;
+  background: #fff;
+}
