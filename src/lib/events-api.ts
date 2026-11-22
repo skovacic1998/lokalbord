@@ -11,6 +11,7 @@ type CurrentEventDto = {
   category: "GLAZBA" | "KULTURA" | "DRUZENJE" | "SPORT" | "ZA_DJECU";
   description?: string;
   posterImage?: string;
+  posterPreviewImage?: string | null;
   boardCol?: number;
   boardRow?: number;
 };
@@ -34,7 +35,7 @@ const categoryLabels: Record<CurrentEventDto["category"], Category> = {
   ZA_DJECU: "Za djecu",
 };
 
-function resolvePosterImage(value: string | undefined) {
+function resolvePosterImage(value: string | null | undefined) {
   if (!value) return undefined;
   if (value.startsWith("data:") || value.startsWith("http://") || value.startsWith("https://")) return value;
   if (eventsEndpoint.startsWith("/")) {
@@ -60,6 +61,7 @@ function toEvent(event: CurrentEventDto, index: number): Event {
     category: categoryLabels[event.category],
     description: event.description || "Detalji događaja uskoro.",
     image: resolvePosterImage(event.posterImage),
+    previewImage: resolvePosterImage(event.posterPreviewImage),
     col: typeof event.boardCol === "number" && Number.isFinite(event.boardCol) ? event.boardCol : index,
     row: typeof event.boardRow === "number" && Number.isFinite(event.boardRow) ? event.boardRow : 0,
   };

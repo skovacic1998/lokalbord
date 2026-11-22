@@ -53,7 +53,7 @@ export function BoardViewport({ events, navigation, onSelect, onAdd, isLoading, 
                 }
               }}
             >
-              <Poster event={event} />
+              <Poster event={event} image={event.previewImage ?? event.image} />
             </div>
           </div>
         ))}

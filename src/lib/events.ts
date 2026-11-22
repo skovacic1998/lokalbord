@@ -11,6 +11,7 @@ export type Event = {
   category: Category;
   description: string;
   image?: string;
+  previewImage?: string;
   col: number;
   row: number;
 };
