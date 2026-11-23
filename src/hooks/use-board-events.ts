@@ -25,7 +25,9 @@ export function useBoardEvents() {
         if (error instanceof DOMException && error.name === "AbortError") return;
         setLoadError(true);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        if (!controller.signal.aborted) setIsLoading(false);
+      });
 
     return () => controller.abort();
   }, []);

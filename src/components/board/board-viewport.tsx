@@ -59,8 +59,12 @@ export function BoardViewport({ events, navigation, onSelect, onAdd, isLoading, 
         ))}
       </div>
       {isLoading && (
-        <div className="empty-board" role="status">
-          <p>Učitavam događaje…</p>
+        <div className="board-loading" role="status" aria-label="Učitavam događaje">
+          <div className="board-loading-posters" aria-hidden="true">
+            <div />
+            <div />
+            <div />
+          </div>
         </div>
       )}
       {!isLoading && loadError && (

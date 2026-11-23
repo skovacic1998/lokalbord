@@ -1,4 +1,5 @@
-import { ArrowLeft, CalendarDays, MapPin } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, CalendarDays, MapPin, Share2 } from "lucide-react";
 import type { Event } from "@/lib/events";
 import { formatDate } from "@/lib/format-date";
 import { Modal } from "./modal";
@@ -9,17 +10,49 @@ type EventDetailsDialogProps = {
   onClose: () => void;
 };
 
-export function EventDetailsDialog({ event, onClose }: EventDetailsDialogProps) {
+export function EventDetailsDialog({
+  event,
+  onClose,
+}: EventDetailsDialogProps) {
+  const [copyStatus, setCopyStatus] = useState("");
+
+  async function handleShare() {
+    const url = new URL(window.location.href);
+    url.searchParams.set("event", event.id);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: event.title, url: url.toString() });
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setCopyStatus("Dijeljenje nije uspjelo.");
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setCopyStatus("Poveznica je kopirana.");
+    } catch (error) {
+      console.error("Kopiranje poveznice nije uspjelo", error);
+      setCopyStatus("Poveznicu nije moguće kopirati.");
+    }
+  }
+
   return (
     <Modal className="detail-modal" titleId="detail-title" onClose={onClose}>
       <div className="detail-poster">
         <Poster event={event} />
       </div>
       <div className="detail-copy">
-        <span className="eyebrow">
-          {event.category.toUpperCase()} / KUTINA
-        </span>
-        <h2 id="detail-title">{event.title}</h2>
+        <span className="eyebrow">{event.category.toUpperCase()} / KUTINA</span>
+        <div className="detail-title-row">
+          <h2 id="detail-title">{event.title}</h2>
+          <button className="detail-share" type="button" onClick={handleShare}>
+            <Share2 size={16} /> Podijeli
+          </button>
+        </div>
+        {copyStatus && <div className="detail-copy-status" role="status">{copyStatus}</div>}
         <p>{event.description}</p>
         <div className="detail-facts">
           <div>
