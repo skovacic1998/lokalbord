@@ -90,7 +90,7 @@ export function Lokalbord() {
         loadError={loadError}
       />
       <nav className="board-footer" aria-label="Informacije o Lokalbordu">
-        <Link href="/novosti">Što je novo?</Link>
+        <Link className="board-news-link" href="/novosti">Što je novo?</Link>
         <Link href="/kako-koristiti">Kako koristiti</Link>
         <Link href="/uvjeti-koristenja">Uvjeti korištenja</Link>
         <Link href="/politika-privatnosti">Privatnost</Link>
