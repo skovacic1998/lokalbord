@@ -9,13 +9,14 @@ import { Modal } from "@/components/board/modal";
 import { SubmitEventDialog } from "@/components/board/submit-event-dialog";
 import { useBoardEvents } from "@/hooks/use-board-events";
 import { useBoardNavigation } from "@/hooks/use-board-navigation";
+import { useNewPosters } from "@/hooks/use-new-posters";
 import type { Event, EventSubmissionDraft } from "@/lib/events";
 
 export function Lokalbord() {
   const [selected, setSelected] = useState<Event | null>(null);
   const [eventUnavailable, setEventUnavailable] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
-  const { activeEvents, submitEvent, notice, isLoading, loadError } =
+  const { activeEvents, now, submitEvent, notice, isLoading, loadError, refresh } =
     useBoardEvents();
   const navigation = useBoardNavigation((id) => {
     const event = activeEvents.find((event) => event.id === id);
@@ -24,6 +25,8 @@ export function Lokalbord() {
       openEvent(event);
     }
   });
+  const boardVisible = navigation.ready && !isLoading && !loadError && !selected && !eventUnavailable && !submitOpen;
+  const newPosterIds = useNewPosters(activeEvents, boardVisible, refresh);
 
   async function handleSubmit(
     draft: EventSubmissionDraft,
@@ -83,6 +86,8 @@ export function Lokalbord() {
       </header>
       <BoardViewport
         events={activeEvents}
+        newPosterIds={newPosterIds}
+        now={now}
         navigation={navigation}
         onSelect={openEvent}
         onAdd={() => setSubmitOpen(true)}
