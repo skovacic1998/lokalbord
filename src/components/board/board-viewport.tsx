@@ -1,11 +1,12 @@
 import type { BoardNavigation } from "@/hooks/use-board-navigation";
 import { toBoardPixels } from "@/lib/board";
-import type { Event } from "@/lib/events";
+import { isEventToday, type Event } from "@/lib/events";
 import { Poster } from "./poster";
 
 type BoardViewportProps = {
   events: Event[];
   newPosterIds: ReadonlySet<string>;
+  now: number;
   navigation: BoardNavigation;
   onSelect: (event: Event) => void;
   onAdd: () => void;
@@ -13,7 +14,7 @@ type BoardViewportProps = {
   loadError: boolean;
 };
 
-export function BoardViewport({ events, newPosterIds, navigation, onSelect, onAdd, isLoading, loadError }: BoardViewportProps) {
+export function BoardViewport({ events, newPosterIds, now, navigation, onSelect, onAdd, isLoading, loadError }: BoardViewportProps) {
   const { view, ready, viewportRef, pointerDown, pointerMove, pointerUp, pointerCancel, keyDown } = navigation;
 
   return (
@@ -46,7 +47,7 @@ export function BoardViewport({ events, newPosterIds, navigation, onSelect, onAd
               data-poster-id={event.id}
               role="button"
               tabIndex={0}
-              aria-label={`${newPosterIds.has(event.id) ? "Novo: " : ""}${event.title}, ${event.dateLabel}, ${event.venue}`}
+              aria-label={`${newPosterIds.has(event.id) ? "Novo: " : ""}${isEventToday(event, now) ? "Večeras: " : ""}${event.title}, ${event.dateLabel}, ${event.venue}`}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
@@ -55,11 +56,12 @@ export function BoardViewport({ events, newPosterIds, navigation, onSelect, onAd
               }}
             >
               <Poster event={event} image={event.previewImage ?? event.image} />
-              {newPosterIds.has(event.id) && (
-                <span className="poster-new" aria-hidden="true"
-                  style={{ transform: `scale(${Math.min(5.5, 1 / view.scale)})` }}>
-                  NOVO
-                </span>
+              {(newPosterIds.has(event.id) || isEventToday(event, now)) && (
+                <div className="poster-badges" aria-hidden="true"
+                  style={{ transform: `scale(${Math.min(isEventToday(event, now) ? 3 : 5.5, 1 / view.scale)})` }}>
+                  {newPosterIds.has(event.id) && <span className="poster-new">NOVO</span>}
+                  {isEventToday(event, now) && <span className="poster-tonight">VEČERAS</span>}
+                </div>
               )}
             </div>
           </div>

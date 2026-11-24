@@ -56,5 +56,5 @@ export function useBoardEvents() {
     noticeTimer.current = setTimeout(() => setNotice(null), 6500);
   }
 
-  return { activeEvents, submitEvent, notice, isLoading, loadError, refresh };
+  return { activeEvents, now, submitEvent, notice, isLoading, loadError, refresh };
 }

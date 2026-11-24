@@ -16,7 +16,7 @@ export function Lokalbord() {
   const [selected, setSelected] = useState<Event | null>(null);
   const [eventUnavailable, setEventUnavailable] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
-  const { activeEvents, submitEvent, notice, isLoading, loadError, refresh } =
+  const { activeEvents, now, submitEvent, notice, isLoading, loadError, refresh } =
     useBoardEvents();
   const navigation = useBoardNavigation((id) => {
     const event = activeEvents.find((event) => event.id === id);
@@ -87,6 +87,7 @@ export function Lokalbord() {
       <BoardViewport
         events={activeEvents}
         newPosterIds={newPosterIds}
+        now={now}
         navigation={navigation}
         onSelect={openEvent}
         onAdd={() => setSubmitOpen(true)}
