@@ -10,6 +10,12 @@ const updates = [
   {
     date: "2026-11-24",
     dateLabel: "24. 11. 2026.",
+    title: "Nedostaje neki događaj?",
+    description: "Znaš za događaj kojeg nema na panou? Sada možeš kopirati ili podijeliti poruku i pozvati organizatora da doda svoj plakat.",
+  },
+  {
+    date: "2026-11-24",
+    dateLabel: "24. 11. 2026.",
     title: "Lakše pronađi nove i današnje događaje",
     description: "Na plakatima sada možeš vidjeti oznaku NOVO za događaje dodane od tvog zadnjeg posjeta i VEČERAS za one koji se održavaju danas.",
   },
@@ -47,7 +53,7 @@ export default function NewsPage() {
         </header>
         <div className="news-feed">
           {updates.map((update) => (
-            <article className="news-entry" key={update.date}>
+            <article className="news-entry" key={update.title}>
               <time dateTime={update.date}>{update.dateLabel}</time>
               <div>
                 <h2>{update.title}</h2>
