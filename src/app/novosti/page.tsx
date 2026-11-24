@@ -10,6 +10,12 @@ const updates = [
   {
     date: "2026-11-24",
     dateLabel: "24. 11. 2026.",
+    title: "Lokalbord ima tamni način",
+    description: "Sada možeš prebaciti pano u tamni način pomoću ikone na vrhu. Lokalbord će zapamtiti tvoj odabir.",
+  },
+  {
+    date: "2026-11-24",
+    dateLabel: "24. 11. 2026.",
     title: "Nedostaje neki događaj?",
     description: "Znaš za događaj kojeg nema na panou? Sada možeš kopirati ili podijeliti poruku i pozvati organizatora da doda svoj plakat.",
   },
