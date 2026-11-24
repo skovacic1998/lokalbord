@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const updates = [
   {
+    date: "2026-11-24",
+    dateLabel: "24. 11. 2026.",
+    title: "Lakše pronađi nove i današnje događaje",
+    description: "Na plakatima sada možeš vidjeti oznaku NOVO za događaje dodane od tvog zadnjeg posjeta i VEČERAS za one koji se održavaju danas.",
+  },
+  {
     date: "2026-11-23",
     dateLabel: "23. 11. 2026.",
     title: "Pošalji plakat ekipi",
