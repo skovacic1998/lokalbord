@@ -193,12 +193,36 @@ textarea:focus-visible,
   transform: translate(-50%, -50%);
 }
 .poster-frame {
+  position: relative;
   width: 100%;
   height: 100%;
   background: #fff;
   box-shadow: 0 1px 5px #00000014;
   cursor: pointer;
   overflow: hidden;
+}
+.poster-badges {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  transform-origin: top right;
+  pointer-events: none;
+}
+.poster-new,
+.poster-tonight {
+  padding: 2px 3px;
+  background: #ffdf44;
+  color: #222;
+  font: bold 9px/1 monospace;
+}
+.poster-tonight {
+  background: #222;
+  color: #fff;
 }
 .poster-frame > .poster-art {
   width: 218px;
