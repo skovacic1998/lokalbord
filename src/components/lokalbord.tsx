@@ -7,6 +7,7 @@ import { BoardViewport } from "@/components/board/board-viewport";
 import { EventDetailsDialog } from "@/components/board/event-details-dialog";
 import { Modal } from "@/components/board/modal";
 import { SubmitEventDialog } from "@/components/board/submit-event-dialog";
+import { MissingEventPrompt } from "@/components/board/missing-event-prompt";
 import { useBoardEvents } from "@/hooks/use-board-events";
 import { useBoardNavigation } from "@/hooks/use-board-navigation";
 import type { Event, EventSubmissionDraft } from "@/lib/events";
@@ -89,6 +90,7 @@ export function Lokalbord() {
         isLoading={isLoading}
         loadError={loadError}
       />
+      <MissingEventPrompt />
       <nav className="board-footer" aria-label="Informacije o Lokalbordu">
         <Link className="board-news-link" href="/novosti">Što je novo?</Link>
         <Link href="/kako-koristiti">Kako koristiti</Link>

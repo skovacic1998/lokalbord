@@ -83,6 +83,32 @@ textarea:focus-visible,
 .info-back:hover {
   text-decoration: underline;
 }
+.missing-event-trigger {
+  position: fixed;
+  left: 24px;
+  bottom: 54px;
+  z-index: 10;
+  border: 0;
+  padding: 6px 8px;
+  background: #f1f0ecee;
+  color: #555;
+  font: 12px monospace;
+}
+.missing-event-trigger:hover { color: #222; text-decoration: underline; }
+.missing-event-modal textarea { min-height: 150px; line-height: 1.5; }
+.missing-event-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.missing-event-share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #222;
+  padding: 12px;
+  background: #fff;
+  color: #222;
+  font-size: 13px;
+}
+.missing-event-status { min-height: 1.5em; margin: 10px 0 0; color: #666; font-size: 12px; }
 .board-viewport {
   position: fixed;
   inset: 0;
@@ -655,6 +681,10 @@ h4 {
     padding: 6px;
     background: #f1f0ecee;
     font: 12px monospace;
+  }
+  .missing-event-trigger {
+    left: 16px;
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 62px);
   }
   .info-page {
     padding: 22px 20px 48px;
