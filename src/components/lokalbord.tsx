@@ -12,6 +12,7 @@ import { useBoardEvents } from "@/hooks/use-board-events";
 import { useBoardNavigation } from "@/hooks/use-board-navigation";
 import { useNewPosters } from "@/hooks/use-new-posters";
 import type { Event, EventSubmissionDraft } from "@/lib/events";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Lokalbord() {
   const [selected, setSelected] = useState<Event | null>(null);
@@ -81,9 +82,12 @@ export function Lokalbord() {
         >
           LOKALBORD
         </button>
-        <button type="button" onClick={() => setSubmitOpen(true)}>
-          DODAJ PLAKAT
-        </button>
+        <div className="wall-actions">
+          <ThemeToggle />
+          <button type="button" onClick={() => setSubmitOpen(true)}>
+            DODAJ PLAKAT
+          </button>
+        </div>
       </header>
       <BoardViewport
         events={activeEvents}
