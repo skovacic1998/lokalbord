@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type Event, type EventSubmissionDraft } from "@/lib/events";
 import { getCurrentEvents, submitEvent as sendEventSubmission } from "@/lib/events-api";
 
@@ -8,6 +8,12 @@ export function useBoardEvents() {
   const [notice, setNotice] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [request, setRequest] = useState(0);
+  const refresh = useCallback(() => {
+    setIsLoading(true);
+    setLoadError(false);
+    setRequest((value) => value + 1);
+  }, []);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -30,7 +36,7 @@ export function useBoardEvents() {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [request]);
 
   useEffect(() => () => {
     if (noticeTimer.current) clearTimeout(noticeTimer.current);
@@ -50,5 +56,5 @@ export function useBoardEvents() {
     noticeTimer.current = setTimeout(() => setNotice(null), 6500);
   }
 
-  return { activeEvents, submitEvent, notice, isLoading, loadError };
+  return { activeEvents, submitEvent, notice, isLoading, loadError, refresh };
 }

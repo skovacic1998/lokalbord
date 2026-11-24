@@ -5,6 +5,7 @@ import { Poster } from "./poster";
 
 type BoardViewportProps = {
   events: Event[];
+  newPosterIds: ReadonlySet<string>;
   navigation: BoardNavigation;
   onSelect: (event: Event) => void;
   onAdd: () => void;
@@ -12,7 +13,7 @@ type BoardViewportProps = {
   loadError: boolean;
 };
 
-export function BoardViewport({ events, navigation, onSelect, onAdd, isLoading, loadError }: BoardViewportProps) {
+export function BoardViewport({ events, newPosterIds, navigation, onSelect, onAdd, isLoading, loadError }: BoardViewportProps) {
   const { view, ready, viewportRef, pointerDown, pointerMove, pointerUp, pointerCancel, keyDown } = navigation;
 
   return (
@@ -45,7 +46,7 @@ export function BoardViewport({ events, navigation, onSelect, onAdd, isLoading, 
               data-poster-id={event.id}
               role="button"
               tabIndex={0}
-              aria-label={`${event.title}, ${event.dateLabel}, ${event.venue}`}
+              aria-label={`${newPosterIds.has(event.id) ? "Novo: " : ""}${event.title}, ${event.dateLabel}, ${event.venue}`}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
@@ -54,6 +55,12 @@ export function BoardViewport({ events, navigation, onSelect, onAdd, isLoading, 
               }}
             >
               <Poster event={event} image={event.previewImage ?? event.image} />
+              {newPosterIds.has(event.id) && (
+                <span className="poster-new" aria-hidden="true"
+                  style={{ transform: `scale(${Math.min(5.5, 1 / view.scale)})` }}>
+                  NOVO
+                </span>
+              )}
             </div>
           </div>
         ))}
