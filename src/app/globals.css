@@ -109,6 +109,12 @@ textarea:focus-visible,
   align-items: center;
   gap: 6px;
 }
+.wall-bar .theme-toggle {
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+}
 .wall-bar button:hover {
   text-decoration: underline;
 }
@@ -144,11 +150,11 @@ textarea:focus-visible,
   z-index: 10;
   border: 0;
   padding: 6px 8px;
-  background: #f1f0ecee;
-  color: #555;
+  background: var(--page-overlay);
+  color: var(--muted);
   font: 12px monospace;
 }
-.missing-event-trigger:hover { color: #222; text-decoration: underline; }
+.missing-event-trigger:hover { color: var(--text); text-decoration: underline; }
 .missing-event-modal textarea { min-height: 150px; line-height: 1.5; }
 .missing-event-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .missing-event-share {
@@ -156,13 +162,13 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid #222;
+  border: 1px solid var(--text);
   padding: 12px;
-  background: #fff;
-  color: #222;
+  background: var(--surface);
+  color: var(--text);
   font-size: 13px;
 }
-.missing-event-status { min-height: 1.5em; margin: 10px 0 0; color: #666; font-size: 12px; }
+.missing-event-status { min-height: 1.5em; margin: 10px 0 0; color: var(--muted); font-size: 12px; }
 .board-viewport {
   position: fixed;
   inset: 0;
@@ -286,6 +292,7 @@ textarea:focus-visible,
 }
 .poster-art {
   color: #222;
+  background: #fff;
   height: 100%;
   width: 100%;
   position: relative;
