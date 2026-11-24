@@ -43,5 +43,5 @@ export function isEventToday(event: Pick<Event, "startsAt" | "endsAt">, now: num
   if (!now || !Number.isFinite(startsAt.getTime()) || !Number.isFinite(endsAt.getTime())) return false;
 
   const today = kutinaDate.format(now);
-  return endsAt.getTime() > now && kutinaDate.format(startsAt) <= today && kutinaDate.format(endsAt) >= today;
+  return endsAt.getTime() > now && kutinaDate.format(startsAt) === today;
 }
